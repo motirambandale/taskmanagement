@@ -12,7 +12,7 @@
 	<groupId>com.example.taskmanagement</groupId>
 	<artifactId>taskmanagement</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>orderservice</name>
+	<name>taskmanagement</name>
 	<description>Task Management Spring Boot Application</description>
 	<url />
 	<licenses>
@@ -104,5 +104,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<finalName>taskmanagement</finalName>
 </project>

@@ -4,8 +4,6 @@ pipeline {
     environment {
         // Ensure this matches the SonarQube server name configured in Jenkins
         SONARQUBE_ENV = 'SonarQube'
-        // Ensure this matches the Maven tool name configured in Jenkins
-        MAVEN_TOOL = 'Default Maven'
     }
 
     stages {
@@ -19,7 +17,6 @@ pipeline {
             steps {
                 echo 'Running SonarQube Analysis...'
                 script {
-                    def mvnHome = tool name: "${MAVEN_TOOL}", type: 'Maven'
                     withSonarQubeEnv("${SONARQUBE_ENV}") {
                         bat "${mvnHome}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=taskmanagement_dev"
                     }

@@ -27,7 +27,6 @@ public class OpenAPIConfig {
                 .title("Task API")
                 .version("1.0")
                 .description("This API exposes endpoints to manage tasks.");
-               
         
         OpenAPI openAPI = new OpenAPI()
                 .info(info)

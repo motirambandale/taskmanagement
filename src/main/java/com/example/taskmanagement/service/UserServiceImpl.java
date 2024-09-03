@@ -1,6 +1,5 @@
 package com.example.taskmanagement.service;
 
-
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Service;
 import com.example.taskmanagement.dto.RegisterRequest;
 import com.example.taskmanagement.model.User;
 import com.example.taskmanagement.repository.UserRepository;
-
-
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,8 +29,7 @@ public class UserServiceImpl implements UserService {
     }
     
     public String getLoggedInUsername() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
         if (principal instanceof UserDetails) {
             return ((UserDetails) principal).getUsername();
         } else {

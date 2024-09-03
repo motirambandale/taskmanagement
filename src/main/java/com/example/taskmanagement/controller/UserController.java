@@ -49,8 +49,7 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody  AuthRequest authRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));        
 		 UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-         String jwtToken = jwtUtil.generateToken(userDetails.getUsername());
-      
+         String jwtToken = jwtUtil.generateToken(userDetails.getUsername());      
         return ResponseEntity.ok(jwtToken);
     }
 

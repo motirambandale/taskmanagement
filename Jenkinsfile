@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     environment {
+        // Ensure this matches the SonarQube server name configured in Jenkins
         SONARQUBE_ENV = 'SonarQube'
-        MAVEN_TOOL = 'MAVEN_HOME'
-        SONAR_SCANNER_TOOL = 'SonarScanner'
+        // Ensure this matches the Maven tool name configured in Jenkins
+        MAVEN_TOOL = 'Default Maven'
     }
 
     stages {
@@ -47,13 +48,8 @@ pipeline {
             steps {
                 echo 'Deploying the application...'
                 script {
-                    if (isUnix()) {
-                        sh 'echo Deploying on Linux/Unix...'
-                        // Add your Linux/Unix-specific deployment steps here
-                    } else {
-                        bat 'echo Deploying on Windows...'
-                        // Add your Windows-specific deployment steps here
-                    }
+                    bat 'echo Deploying on Windows...'
+                    // Add your Windows-specific deployment steps here
                 }
             }
         }
@@ -74,13 +70,7 @@ pipeline {
             echo 'Build failed!'
         }
         always {
-            // Publish SonarQube results to Jenkins
-            script {
-                def scannerHome = tool name: "${SONAR_SCANNER_TOOL}", type: 'hudson.plugins.sonar.SonarRunnerInstallation';
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    bat "${scannerHome}/bin/sonar-scanner"
-                }
-            }
+            echo 'Always runs after the pipeline stages'
         }
     }
 }

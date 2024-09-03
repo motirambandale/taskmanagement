@@ -2,10 +2,9 @@ pipeline {
     agent any
 
     environment {
-        // SonarQube environment name as configured in Jenkins under "Manage Jenkins" > "Configure System"
         SONARQUBE_ENV = 'SonarQube'
-        // Maven tool name as configured in Jenkins under "Manage Jenkins" > "Global Tool Configuration"
-        MAVEN_TOOL = 'Default Maven'
+        MAVEN_TOOL = 'MAVEN_HOME'
+        SONAR_SCANNER_TOOL = 'SonarScanner'
     }
 
     stages {
@@ -77,7 +76,7 @@ pipeline {
         always {
             // Publish SonarQube results to Jenkins
             script {
-                def scannerHome = tool 'SonarQube Scanner';
+                def scannerHome = tool name: "${SONAR_SCANNER_TOOL}", type: 'hudson.plugins.sonar.SonarRunnerInstallation';
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
                     bat "${scannerHome}/bin/sonar-scanner"
                 }

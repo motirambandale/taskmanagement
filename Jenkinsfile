@@ -2,54 +2,40 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the code from the master branch of the GitHub repository
-                git branch: 'master',
-                    url: 'https://github.com/motirambandale/taskmanagement.git'
-            }
-        }
-
         stage('Build') {
             steps {
-                // Building the project
                 echo 'Building the project...'
-                // Replace this with your actual build command, e.g., `mvn clean install` for a Maven project
-                sh './mvnw clean install'
+                bat 'mvn clean package'
             }
         }
-
         stage('Test') {
             steps {
-                // Running tests
                 echo 'Running tests...'
-                // Replace this with your actual test command
-                sh './mvnw test'
+                bat 'mvn test'
             }
         }
-
         stage('Package') {
             steps {
-                // Packaging the application
-                echo 'Packaging the application...'
-                // Replace this with your actual packaging command, e.g., `mvn package`
-                sh './mvnw package'
+                echo 'Packaging the project...'
+                bat 'mvn package'
             }
         }
-
         stage('Deploy') {
             steps {
-                // Deploying the application
                 echo 'Deploying the application...'
-                // Add your deployment steps here, e.g., copying the artifact to a server
+                script {
+                    if (isUnix()) {
+                        sh 'echo Deploying on Linux/Unix...'
+                        // Add your Linux/Unix-specific deployment steps here
+                    } else {
+                        bat 'echo Deploying on Windows...'
+                        // Add your Windows-specific deployment steps here
+                    }
+                }
             }
         }
     }
-
     post {
-        success {
-            echo 'Build succeeded!'
-        }
         failure {
             echo 'Build failed!'
         }

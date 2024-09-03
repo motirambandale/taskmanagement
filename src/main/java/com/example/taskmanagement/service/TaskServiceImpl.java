@@ -15,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 
 import com.example.taskmanagement.dto.TaskDTO;
 import com.example.taskmanagement.model.Task;
+import com.example.taskmanagement.model.User;
 import com.example.taskmanagement.repository.TaskRepository;
+import com.example.taskmanagement.repository.UserRepository;
 
 @Service
 @Transactional
@@ -23,6 +25,9 @@ public class TaskServiceImpl implements TaskService {
 
 	@Autowired
 	private TaskRepository taskRepository;
+	
+	@Autowired
+	private UserService userService;
 
 	public TaskDTO createTask(TaskDTO taskDTO) {
 		Task task = new Task();
@@ -31,6 +36,8 @@ public class TaskServiceImpl implements TaskService {
 		task.setStatus(taskDTO.getStatus());
 		task.setPriority(taskDTO.getPriority());
 		task.setDue_date(taskDTO.getDue_date());
+		User user=userService.getLoggedInUser();
+		task.setUser(user);
 		Task savedTask = taskRepository.save(task);
 		return convertToDTO(savedTask);
 	}

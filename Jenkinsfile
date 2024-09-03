@@ -1,10 +1,17 @@
 pipeline {
     agent any
 
+    environment {
+        // SonarQube environment name as configured in Jenkins under "Manage Jenkins" > "Configure System"
+        SONARQUBE_ENV = 'SonarQube'
+        // Maven tool name as configured in Jenkins under "Manage Jenkins" > "Global Tool Configuration"
+        MAVEN_TOOL = 'Default Maven'
+    }
+
     stages {
-        stage('SCM') {
+        stage('Checkout Code') {
             steps {
-                echo 'Checking out the code...'
+                echo 'Checking out code from GitHub...'
                 checkout scm
             }
         }
@@ -12,9 +19,9 @@ pipeline {
             steps {
                 echo 'Running SonarQube Analysis...'
                 script {
-                    def mvn = tool name: 'Default Maven', type: 'Maven'
-                    withSonarQubeEnv('SonarQube') {
-                        bat "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=taskmanagement_dev"
+                    def mvnHome = tool name: "${MAVEN_TOOL}", type: 'Maven'
+                    withSonarQubeEnv("${SONARQUBE_ENV}") {
+                        bat "${mvnHome}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=taskmanagement_dev"
                     }
                 }
             }
@@ -46,4 +53,35 @@ pipeline {
                         // Add your Linux/Unix-specific deployment steps here
                     } else {
                         bat 'echo Deploying on Windows...'
-                        // Add your Windows-specific deployment ste
+                        // Add your Windows-specific deployment steps here
+                    }
+                }
+            }
+        }
+        stage('SonarQube Quality Gate') {
+            steps {
+                echo 'Checking SonarQube Quality Gate...'
+                script {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
+        always {
+            // Publish SonarQube results to Jenkins
+            script {
+                def scannerHome = tool 'SonarQube Scanner';
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    bat "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+    }
+}

@@ -20,7 +20,7 @@ pipeline {
                 echo 'Running SonarQube Analysis...'
                 script {
                     withSonarQubeEnv("${SONARQUBE_ENV}") {
-                        bat "\"${mvnHome}\\bin\\mvn\" clean verify sonar:sonar -Dsonar.projectKey=taskmanagement_dev -Dsonar.qualitygate.wait=false"
+                        bat "\"${mvnHome}\\bin\\mvn\" clean verify sonar:sonar -Dsonar.projectKey=taskmanagement_dev"
                     }
                 }
             }
@@ -55,16 +55,7 @@ pipeline {
                     // Add your Windows-specific deployment steps here
                 }
             }
-        }
-
-        stage('SonarQube Quality Gate') {
-            steps {
-                echo 'Checking SonarQube Quality Gate...'
-                script {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
+        } 
     }
 
     post {

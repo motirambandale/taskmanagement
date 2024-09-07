@@ -20,8 +20,7 @@ pipeline {
                 echo 'Running SonarQube Analysis...'
                 script {
                     withSonarQubeEnv("${SONARQUBE_ENV}") {
-                         bat "\"${mvnHome}\\bin\\mvn\" clean verify sonar:sonar
-                                -Dsonar.projectKey=taskmanagement_dev -Dsonar.qualitygate.wait=false"
+                        bat "\"${mvnHome}\\bin\\mvn\" clean verify sonar:sonar -Dsonar.projectKey=taskmanagement_dev -Dsonar.qualitygate.wait=false"
                     }
                 }
             }

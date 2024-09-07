@@ -36,7 +36,7 @@ public class TaskServiceImpl implements TaskService {
 		task.setDescription(taskDTO.getDescription());
 		task.setStatus(taskDTO.getStatus());
 		task.setPriority(taskDTO.getPriority());
-		task.setDue_date(taskDTO.getDue_date());
+		task.setDueDate(taskDTO.getDueDate());
 		User user = userService.getLoggedInUser();
 		task.setUser(user);
 		Task savedTask = taskRepository.save(task);
@@ -51,7 +51,7 @@ public class TaskServiceImpl implements TaskService {
 		task.setDescription(taskDTO.getDescription());
 		task.setStatus(taskDTO.getStatus());
 		task.setPriority(taskDTO.getPriority());
-		task.setDue_date(taskDTO.getDue_date());
+		task.setDueDate(taskDTO.getDueDate());
 		task.setUpdatedAt(LocalDateTime.now());
 		Task savedTask = taskRepository.save(task);
 		return convertToDTO(savedTask);
@@ -93,7 +93,7 @@ public class TaskServiceImpl implements TaskService {
 		taskDTO.setDescription(task.getDescription());
 		taskDTO.setStatus(task.getStatus());
 		taskDTO.setPriority(task.getPriority());
-		taskDTO.setDue_date(task.getDue_date());
+		taskDTO.setDueDate(task.getDueDate());
 		return taskDTO;
 	}
 }

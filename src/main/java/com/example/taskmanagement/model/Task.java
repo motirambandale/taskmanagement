@@ -1,10 +1,6 @@
 package com.example.taskmanagement.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,12 +19,14 @@ public class Task {
     private String description;
     private String status;
     private String priority;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date due_date;
+
+    @Column(name = "due_date")
+    private LocalDateTime dueDate;
+
     @Column(name = "created_at", updatable = false, insertable = true)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at",  insertable = false,updatable = true)
+    @Column(name = "updated_at", insertable = false, updatable = true)
     private LocalDateTime updatedAt;
 
     @PrePersist
@@ -36,6 +34,7 @@ public class Task {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
+
     @PostUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();

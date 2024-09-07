@@ -1,10 +1,8 @@
 package com.example.taskmanagement.dto;
 
-import java.util.Date;
-
+import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,23 +20,20 @@ public class TaskDTO {
     @Schema(description = "Title of the task", example = "New Task")
     private String title;
 
-    @Schema(description = "Description of the product ordered", example = "Task description")
+    @Schema(description = "Description of the task", example = "Task description")
     private String description;
 
-    @Schema(description = "Status of the task", example = " Todo, In Progress, Done")
+    @Schema(description = "Status of the task", example = "Todo, In Progress, Done")
     private String status;
     
-    @Schema(description = "priority of the task", example = "Low , Medium , High")
+    @Schema(description = "Priority of the task", example = "Low, Medium, High")
     private String priority;
 
-    @Schema(description = "Due date of the task", example = "yyyy-MM-dd")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date due_date;   
-    
+    @Schema(description = "Due date of the task", example = "2023-12-31T23:59:59")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime dueDate;   
     
     @JsonIgnore
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date updated_At;   
-    
-    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime updatedAt;   
 }

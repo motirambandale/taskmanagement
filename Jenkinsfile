@@ -1,9 +1,14 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven 3.9.3'  // Use the local Maven version
+    }
+
     environment {
         // Ensure this matches the SonarQube server name configured in Jenkins
-        SONARQUBE_ENV = 'SonarQube'
+        SONARQUBE_ENV = 'SonarServer'
+         mvnHome = 'C:\Ram Desktop\Softwares\apache-maven-3.9.3'  // Update with your actual local Maven path
     }
 
     stages {
@@ -13,6 +18,7 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('SonarQube Analysis') {
             steps {
                 echo 'Running SonarQube Analysis...'
@@ -23,24 +29,28 @@ pipeline {
                 }
             }
         }
+
         stage('Build') {
             steps {
                 echo 'Building the project...'
-                bat 'mvn clean package'
+                bat "${mvnHome}/bin/mvn clean package"
             }
         }
+
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                bat 'mvn test'
+                bat "${mvnHome}/bin/mvn test"
             }
         }
+
         stage('Package') {
             steps {
                 echo 'Packaging the project...'
-                bat 'mvn package'
+                bat "${mvnHome}/bin/mvn package"
             }
         }
+
         stage('Deploy') {
             steps {
                 echo 'Deploying the application...'
@@ -50,6 +60,7 @@ pipeline {
                 }
             }
         }
+
         stage('SonarQube Quality Gate') {
             steps {
                 echo 'Checking SonarQube Quality Gate...'
@@ -59,6 +70,7 @@ pipeline {
             }
         }
     }
+
     post {
         success {
             echo 'Build succeeded!'

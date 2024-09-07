@@ -17,10 +17,10 @@ import java.util.function.Function;
 public class JwtUtil {
 
     @Value("${jwt.secret}")
-    private String secret;
+    String secret;
 
-    @Value("${jwt.expiration}")
-    private long expiration;
+    @Value("${jwt.expiration}") 
+    Long expiration;
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -64,6 +64,10 @@ public class JwtUtil {
     }
 
     private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        Date expiration = extractExpiration(token);
+        // Allow a small clock skew (e.g., 5 seconds)
+        long allowedSkewMillis = 5000; // 5 seconds
+        return expiration.before(new Date(System.currentTimeMillis() - allowedSkewMillis));
     }
+
 }

@@ -1,33 +1,34 @@
 package com.example.taskmanagement.service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.taskmanagement.dto.TaskDTO;
 import com.example.taskmanagement.model.Task;
 import com.example.taskmanagement.model.User;
 import com.example.taskmanagement.repository.TaskRepository;
-import com.example.taskmanagement.repository.UserRepository;
 
 @Service
 @Transactional
 public class TaskServiceImpl implements TaskService {
 
-	@Autowired
 	private TaskRepository taskRepository;
-	
-	@Autowired
+
 	private UserService userService;
+
+	public TaskServiceImpl(TaskRepository taskRepository, UserService userService) {
+		super();
+		this.taskRepository = taskRepository;
+		this.userService = userService;
+	}
 
 	public TaskDTO createTask(TaskDTO taskDTO) {
 		Task task = new Task();
@@ -36,11 +37,12 @@ public class TaskServiceImpl implements TaskService {
 		task.setStatus(taskDTO.getStatus());
 		task.setPriority(taskDTO.getPriority());
 		task.setDue_date(taskDTO.getDue_date());
-		User user=userService.getLoggedInUser();
+		User user = userService.getLoggedInUser();
 		task.setUser(user);
 		Task savedTask = taskRepository.save(task);
 		return convertToDTO(savedTask);
 	}
+
 	@Override
 	public TaskDTO updateTask(Long id, TaskDTO taskDTO) {
 		Task task = taskRepository.findById(id).orElse(null);
@@ -61,12 +63,12 @@ public class TaskServiceImpl implements TaskService {
 		return task.map(this::convertToDTO).orElse(null);
 	}
 
-	 @Override
-	    public List<TaskDTO> getAllTasks(int page, int size) {
-	        Pageable pageable = PageRequest.of(page, size);
-	        Page<Task> taskPage = taskRepository.findAll(pageable);   
-	        return taskPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
-	    }
+	@Override
+	public List<TaskDTO> getAllTasks(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Task> taskPage = taskRepository.findAll(pageable);
+		return taskPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
+	}
 
 	@Override
 	public boolean deleteTask(Long id) {
@@ -77,10 +79,11 @@ public class TaskServiceImpl implements TaskService {
 		}
 		return false;
 	}
+
 	@Override
 	public List<TaskDTO> searchTaskByTitleOrDescription(String searchTerm) {
 		List<Task> tasks = taskRepository.searchTaskByTitleOrDescription(searchTerm);
-		return tasks.stream().map(this::convertToDTO).collect(Collectors.toList());	
+		return tasks.stream().map(this::convertToDTO).collect(Collectors.toList());
 	}
 
 	private TaskDTO convertToDTO(Task task) {
@@ -92,5 +95,5 @@ public class TaskServiceImpl implements TaskService {
 		taskDTO.setPriority(task.getPriority());
 		taskDTO.setDue_date(task.getDue_date());
 		return taskDTO;
-	}	
+	}
 }

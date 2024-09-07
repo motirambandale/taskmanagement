@@ -1,6 +1,5 @@
 package com.example.taskmanagement.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,18 +25,22 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/api")
 public class UserController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;
 
-    @Autowired
     private UserDetailsService userDetailsService;
 
-    @Autowired
     private JwtUtil jwtUtil;
 
-    @Autowired
     private UserService userService;
-
+    
+    public UserController(AuthenticationManager authenticationManager, UserDetailsService userDetailsService,
+			JwtUtil jwtUtil, UserService userService) {
+		super();
+		this.authenticationManager = authenticationManager;
+		this.userDetailsService = userDetailsService;
+		this.jwtUtil = jwtUtil;
+		this.userService = userService;
+	}
 
     @PostMapping("/login")
     @Operation(summary = "Authenticate a user and generate a JWT token")

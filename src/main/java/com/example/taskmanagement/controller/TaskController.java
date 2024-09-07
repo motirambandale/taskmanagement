@@ -2,7 +2,6 @@ package com.example.taskmanagement.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,8 +26,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/api/tasks")
 public class TaskController {
 
-	@Autowired
 	private TaskService taskService;
+
+	public TaskController(TaskService taskService) {
+		super();
+		this.taskService = taskService;
+	}
 
 	@PostMapping
 	@Operation(summary = "Create a new Task", description = "Create a new task in the system.")
@@ -52,15 +55,15 @@ public class TaskController {
 		if (updatedTaskDTO != null) {
 			return new ResponseEntity<>(taskDTO, HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST); 
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping("/search/{searchTerm}")
 	@Operation(summary = "Search the task by Title or Description", description = "Retrieve an task by its Title or Description.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Task retrieved successfully"),
 			@ApiResponse(responseCode = "404", description = "Task not found") })
-	public ResponseEntity<List<TaskDTO>> searchTaskByTitleOrDescription(@Parameter @PathVariable String  searchTerm) {
+	public ResponseEntity<List<TaskDTO>> searchTaskByTitleOrDescription(@Parameter @PathVariable String searchTerm) {
 		List<TaskDTO> taskDTO = taskService.searchTaskByTitleOrDescription(searchTerm);
 		if (taskDTO != null) {
 			return new ResponseEntity<>(taskDTO, HttpStatus.OK);
@@ -74,7 +77,7 @@ public class TaskController {
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "List of tasks retrieved"),
 			@ApiResponse(responseCode = "204", description = "No tasks found") })
 	public ResponseEntity<List<TaskDTO>> getAllTasks(@Parameter @RequestParam(defaultValue = "0") int page,
-	                                                 @Parameter @RequestParam(defaultValue = "10") int size) {
+			@Parameter @RequestParam(defaultValue = "10") int size) {
 		List<TaskDTO> tasks = taskService.getAllTasks(page, size);
 		if (tasks.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);

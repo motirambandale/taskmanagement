@@ -61,13 +61,14 @@ public class TaskServiceImpl implements TaskService {
 	public TaskDTO getTaskById(Long id) {
 		Optional<Task> task = taskRepository.findById(id);
 		return task.map(this::convertToDTO).orElse(null);
+		
 	}
 
 	@Override
 	public List<TaskDTO> getAllTasks(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Task> taskPage = taskRepository.findAll(pageable);
-		return taskPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
+		return taskPage.getContent().stream().map(this::convertToDTO).toList();
 	}
 
 	@Override

@@ -109,26 +109,39 @@
 			
 			 <!-- Add JaCoCo Plugin -->
         <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.8</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <!-- This prepares the agent to collect coverage data -->
-                        <goal>prepare-agent</goal>
-                    </goals>
-                </execution>
-                <execution>
-                    <id>report</id>
-                    <phase>test</phase>
-                    <goals>
-                        <goal>report</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.8</version>
+    <executions>
+        <execution>
+            <goals>
+                <!-- This prepares the agent to collect coverage data -->
+                <goal>prepare-agent</goal>
+            </goals>
+        </execution>
+        <execution>
+            <id>report</id>
+            <phase>verify</phase> <!-- Changed to 'verify' phase for proper reporting -->
+            <goals>
+                <goal>report</goal>
+            </goals>
+        </execution>
+    </executions>
+ <configuration>
+    <excludes>
+        <!-- Exclude Lombok-generated code in the 'model' package -->
+        <exclude>com/example/taskmanagement/dto/**/*.class</exclude>  
         
+        <!-- Exclude Lombok-generated code in the 'dto' package -->
+        <exclude>com/example/taskmanagement/model/**/*.class</exclude>  
+        
+        <!-- Optionally exclude any files with 'Generated' in the name (if relevant) -->
+        <exclude>**/*Generated*.java</exclude>
+    </excludes>
+</configuration>
+
+</plugin>
+
 		</plugins>
 	</build>
 </project>

@@ -2,7 +2,9 @@ package com.example.taskmanagement.security;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,17 +13,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
 
 class JwtAuthenticationFilterTest {
 
@@ -44,9 +41,12 @@ class JwtAuthenticationFilterTest {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(jwtAuthenticationFilter).build();
     }
+	
 	/*
 	 * @Test void testDoFilterInternal_WithValidToken() throws Exception { String
-	 * token = "valid-token"; String username = "testuser";
+	 * token =
+	 * "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTcyNTcyOTQ5NiwiZXhwIjoxNzI1NzMzMDk2fQ.7iiyOpspJL4PGtJVPSKC95Dhm4R9wsAvoZQ6XX-75Do";
+	 * String username = "testuser";
 	 * 
 	 * when(jwtUtil.extractUsername(token)).thenReturn(username);
 	 * when(jwtUtil.validateToken(token, username)).thenReturn(true);
@@ -61,20 +61,20 @@ class JwtAuthenticationFilterTest {
 	 * 
 	 * jwtAuthenticationFilter.doFilterInternal(request, response, chain);
 	 * 
-	 * verify(jwtUtil).extractUsername(token); verify(jwtUtil).validateToken(token,
-	 * username); verify(userDetailsService).loadUserByUsername(username);
+	 * verify(jwtUtil).extractUsername(token);
+	 * verify(jwtUtil).validateToken(token,username);
+	 * verify(userDetailsService).loadUserByUsername(username);
 	 * verify(chain).doFilter(request, response); }
+	 * 
 	 */
 	/*
 	 * @Test void testDoFilterInternal_WithInvalidToken() throws Exception { String
-	 * token = "invalid-token"; String username = "testuser";
+	 * token = "invalid-token";
 	 * 
 	 * // Mock behavior for invalid token
-	 * when(jwtUtil.extractUsername(token)).thenReturn(username);
-	 * when(jwtUtil.validateToken(eq(token), any(String.class))).thenReturn(false);
-	 * // Ensuring token validation returns false
-	 * when(userDetailsService.loadUserByUsername(username)).thenReturn(userDetails)
-	 * ;
+	 * when(jwtUtil.extractUsername(token)).thenReturn(null); // Simulate extraction
+	 * failure when(jwtUtil.validateToken(eq(token), eq(null))).thenReturn(false);
+	 * // Token is invalid
 	 * 
 	 * HttpServletRequest request = mock(HttpServletRequest.class);
 	 * HttpServletResponse response = mock(HttpServletResponse.class); FilterChain
@@ -82,15 +82,15 @@ class JwtAuthenticationFilterTest {
 	 * 
 	 * when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
 	 * 
-	 * jwtAuthenticationFilter.doFilterInternal(request, response, chain);
+	 * // Invoke the method jwtAuthenticationFilter.doFilterInternal(request,
+	 * response, chain);
 	 * 
-	 * verify(jwtUtil).extractUsername(token);
-	 * verify(jwtUtil).validateToken(eq(token), eq(username)); // Ensure the
-	 * arguments are correctly matched
-	 * verify(userDetailsService).loadUserByUsername(username);
-	 * verify(chain).doFilter(request, response); }
+	 * // Verify that extractUsername and validateToken were called with the
+	 * expected values verify(jwtUtil).extractUsername(token);
+	 * verify(jwtUtil).validateToken(eq(token), eq(null)); // Ensure the token and
+	 * null username are passed verify(chain).doFilter(request, response); }
+	 * 
 	 */
-
     @Test
     void testDoFilterInternal_WithNoToken() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);

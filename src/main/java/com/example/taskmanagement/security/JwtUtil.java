@@ -63,7 +63,7 @@ public class JwtUtil {
                 .getBody();
     }
 
-    private Boolean isTokenExpired(String token) {
+    Boolean isTokenExpired(String token) {
         Date expiration = extractExpiration(token);
         // Allow a small clock skew (e.g., 5 seconds)
         long allowedSkewMillis = 5000; // 5 seconds

@@ -41,7 +41,7 @@ public class OpenAPIConfig {
         return openAPI;
     }
 
-    private void filterPaths(OpenAPI openAPI) {
+    public void filterPaths(OpenAPI openAPI) {
         Paths paths = openAPI.getPaths();
         if (paths != null) {
             Map<String, io.swagger.v3.oas.models.PathItem> filteredPaths = paths.entrySet().stream()

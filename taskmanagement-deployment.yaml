@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskmanagement
+  labels:
+    app: taskmanagement
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: taskmanagement
+  template:
+    metadata:
+      labels:
+        app: taskmanagement
+    spec:
+      containers:
+      - name: taskmanagement
+        image: docker.io/monty123/taskmanagement:${BUILD_NUMBER}  # Updated to use build number
+        ports:
+        - containerPort: 7777
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:mysql://mysql-service:3306/taskmanagementdb"
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-password
+        - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+          value: "update"
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+      imagePullSecrets:
+      - name: docker-registry-credentials  # Docker registry credentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: taskmanagement-service
+  labels:
+    app: taskmanagement
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 7777
+  selector:
+    app: taskmanagement

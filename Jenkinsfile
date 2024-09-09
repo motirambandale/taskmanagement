@@ -8,7 +8,7 @@ pipeline {
         registry = 'docker.io/monty123'  // Docker registry URL
         registryCredentials = 'docker-registry-credentials'  // Jenkins credentials ID for Docker registry
         sonarToken = credentials('jenkins')  // SonarQube token from Jenkins credentials
-        kubeconfigId = 'kubeconfig-credentials-id'  // Jenkins credentials ID for Kubernetes config
+       // kubeconfigId = 'kubeconfig-credentials-id'  // Jenkins credentials ID for Kubernetes config
     }
 
     stages {
@@ -54,28 +54,6 @@ pipeline {
                 }
             }
         }
-
-      stage('Deploy to Kubernetes') {
-    steps {
-        echo 'Deploying to Kubernetes...'
-        script {
-            // Use withCredentials to access the kubeconfig file securely
-            withCredentials([file(credentialsId: "${kubeconfigId}", variable: 'KUBECONFIG')]) {
-                // Apply Kubernetes manifests such as secret, mysql deployment, and service
-                bat 'kubectl apply -f mysql-secret.yaml'
-                bat 'kubectl apply -f mysql-deployment.yaml'
-                bat 'kubectl apply -f taskmanagement-deployment.yaml'
-                
-                // Update the image with specific build number in the Kubernetes deployment
-                bat "kubectl set image deployment/taskmanagement taskmanagement=${registry}/taskmanagement:${env.BUILD_NUMBER} --record"
-                
-                // Monitor the rollout status
-                bat 'kubectl rollout status deployment/taskmanagement'
-            }
-        }
-    }
-}
-      
     }
 
     post {

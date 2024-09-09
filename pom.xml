@@ -111,8 +111,6 @@
 				<executions>
 					<execution>
 						<goals>
-							<!-- This prepares the agent to collect coverage
-							data -->
 							<goal>prepare-agent</goal>
 						</goals>
 					</execution>
@@ -132,9 +130,8 @@
 						<exclude>**/*Generated*.java</exclude>
 					</excludes>
 				</configuration>
-
 			</plugin>
-
 		</plugins>
+		<finalName>taskmanagement</finalName>
 	</build>
 </project>
